@@ -79,7 +79,7 @@ ssl.truststore.password=$(cat ca-password-cluster${i}.txt)
 group.id=perf-consumer-group
 EOF
 
-cat<<EOF > openmessaging-cluster${i}.yaml
+cat<<EOF > omb-drivers/driver-cluster${i}.yaml
 name: Kafka
 driverClass: io.openmessaging.benchmark.driver.kafka.KafkaBenchmarkDriver
 
