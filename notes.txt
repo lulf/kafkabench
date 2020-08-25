@@ -1,0 +1,15 @@
+* Different cluster sizes?
+  * Development - 1 broker - 1 zk
+  * Standard - 3 broker - 3 zk
+  * Large - 10 broker - 3 zk
+  * Mega - 20 broker - 5 zk
+
+* Configurations:
+  * Producer and consumer throughput vs. broker memory
+  * Producer and consumer throughput vs. broker cpu
+  * Producer and consumer throughput vs. ISR
+
+* Can we use anti-affinity to prefer broker and ZK of clusters to not co-locate?
+
+* Tools:
+  * Openmessaging-benchmark seems useful to easily configure test scenarios and measure impact
