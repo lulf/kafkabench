@@ -1,15 +1,26 @@
-* Different cluster sizes?
+* Different cluster sizes? Example:
   * Development - 1 broker - 1 zk
   * Standard - 3 broker - 3 zk
   * Large - 10 broker - 3 zk
   * Mega - 20 broker - 5 zk
 
-* Configurations:
+* Test Configurations?
   * Producer and consumer throughput vs. broker memory
   * Producer and consumer throughput vs. broker cpu
-  * Producer and consumer throughput vs. ISR
+  * Producer and consumer throughput vs. network bandwidth
+  * Producer and consumer throughput vs. ISR (in-sync replicas)
 
-* Can we use anti-affinity to prefer broker and ZK of clusters to not co-locate?
+* Measure
+  * Throughput
+  * Latencies (what is acceptable before we consider it to be degradation?)
+
+
+* Considerations
+  * Use anti-affinity to require broker and ZK of clusters to not co-locate
+  * What set of vCPU and memory is cost-effective for the different cluster sizes?
+  * How well does Kubernetes isolate kafka brokers once they have been setup with limits?
+  * What is the network capacity and what is reasonable bandwidth limits for different configurations?
 
 * Tools:
-  * Openmessaging-benchmark seems useful to easily configure test scenarios and measure impact
+  * Included scripts are nice for one-off testing, but requires lot of tooling to be built around to easily reproduce tests.
+  * Openmessaging-benchmark seems useful to easily configure test scenarios and measure impact.

@@ -1,9 +1,8 @@
 #!/bin/bash
-kubectl config set-context $(kubectl config current-context) --namespace=kafka
 NUM_CLUSTERS=1
 for i in $(seq 1 ${NUM_CLUSTERS})
 do
-    cat <<EOF |kubectl apply -f -
+    cat <<EOF |kubectl apply -n kafka -f -
 apiVersion: kafka.strimzi.io/v1beta1
 kind: Kafka
 metadata:
@@ -11,21 +10,34 @@ metadata:
 spec:
   kafka:
     version: 2.5.0
-    replicas: 1
+    replicas: 3
+    resources:
+      requests:
+        cpu: 2
+        memory: 3Gi
+      limits:
+        cpu: 2
+        memory: 3Gi
+    template:
+      pod:
+        affinity:
+          podAntiAffinity:
+            requiredDuringSchedulingIgnoredDuringExecution:
+              - topologyKey: "kubernetes.io/hostname"
     listeners:
       plain: {}
-      external:
-        type: ingress
-        configuration:
-          bootstrap:
-            host: bootstrap.cluster${i}
-          brokers:
-          - broker: 0
-            host: broker-0.cluster${i}
-          - broker: 1
-            host: broker-1.cluster${i}
-          - broker: 2
-            host: broker-2.cluster${i}
+#      external:
+#        type: route
+#        configuration:
+#          bootstrap:
+#            host: bootstrap.cluster${i}
+#          brokers:
+#          - broker: 0
+#            host: broker-0.cluster${i}
+#          - broker: 1
+#            host: broker-1.cluster${i}
+#          - broker: 2
+#            host: broker-2.cluster${i}
     config:
       offsets.topic.replication.factor: 1
       transaction.state.log.replication.factor: 1
@@ -34,14 +46,22 @@ spec:
       retention.ms: 300000
       segment.bytes: 1073741824
     storage:
-      type: jbod
-      volumes:
-      - id: 0
-        type: persistent-claim
-        size: 10Gi
-        deleteClaim: false
+      type: ephemeral
+#      type: jbod
+#      volumes:
+#      - id: 0
+#        type: persistent-claim
+#        size: 10Gi
+#        deleteClaim: false
   zookeeper:
-    replicas: 1
+    replicas: 3
+    resources:
+      requests:
+        cpu: 1
+        memory: 2Gi
+      limits:
+        cpu: 1
+        memory: 2Gi
     storage:
       type: persistent-claim
       size: 10Gi
@@ -84,17 +104,17 @@ name: Kafka
 driverClass: io.openmessaging.benchmark.driver.kafka.KafkaBenchmarkDriver
 
 # Kafka client-specific configuration
-replicationFactor: 1
+replicationFactor: 3
 
 topicConfig: |
-  min.insync.replicas=1
+  min.insync.replicas=2
 
 commonConfig: |
-  bootstrap.servers=bootstrap.cluster${i}:443
-  security.protocol=SSL
-  ssl.truststore.location=/home/lulf/dev/kafkabench/ca-cluster${i}.p12
-  ssl.truststore.type=PKCS12
-  ssl.truststore.password=$(cat ca-password-cluster${i}.txt)
+  bootstrap.servers=cluster${i}-kafka-bootstrap.kafka.svc:9092
+#  security.protocol=SSL
+#  ssl.truststore.location=/certs/ca-cluster${i}.p12
+#  ssl.truststore.type=PKCS12
+#  ssl.truststore.password=$(cat ca-password-cluster${i}.txt)
 
 producerConfig: |
   acks=all
