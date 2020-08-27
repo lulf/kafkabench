@@ -1,0 +1,13 @@
+name: '1-topic-3 partition-1kB-max'
+
+topics: 1
+partitionsPerTopic: 3
+keyDistributor: "NO_KEY"
+messageSize: 1024
+payloadFile: "omb-payload/payload-1Kb.data"
+subscriptionsPerTopic: 3
+consumerPerSubscription: 1
+producersPerTopic: 3
+producerRate: 0
+consumerBacklogSizeGB: 0
+testDurationMinutes: 1
