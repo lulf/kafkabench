@@ -1,8 +1,8 @@
 * Different cluster sizes? Example:
-  * Development - 1 broker - 1 zk
-  * Standard - 3 broker - 3 zk
-  * Large - 10 broker - 3 zk
-  * Mega - 20 broker - 5 zk
+  * 1 broker - 1 zk
+  * 3 broker - 3 zk
+  * 10 broker - 3 zk
+  * 20 broker - 5 zk
 
 * Test Configurations?
   * Producer and consumer throughput vs. broker memory
