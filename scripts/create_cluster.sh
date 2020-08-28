@@ -1,4 +1,6 @@
 #!/bin/bash
+mkdir -p omb-drivers
+
 NUM_CLUSTERS=1
 for i in $(seq 1 ${NUM_CLUSTERS})
 do
